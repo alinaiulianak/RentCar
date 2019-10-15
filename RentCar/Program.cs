@@ -102,7 +102,7 @@ namespace RentCar
             switch (vMenu)
             {
                 case 1:
-                    Console.WriteLine("Register new Cart Rent");
+                    //Console.WriteLine("Register new Cart Rent");
                     Console.Write("Cart Id:");
                     Reservations myReservation = new Reservations ();
                     //myReservation .CarID= int.Parse (Console.ReadLine());
