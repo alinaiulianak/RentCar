@@ -8,10 +8,15 @@ namespace RentCar
 {
     class Cars
     {
-        public int CarID { get; set; }
+        public int CarID
+        {
+            get { return CarID; }
+            set { CarID = value; }
+        }
         public string Plate { get; set; }
         public string Manufacturer { get; set; }
         public string Model { get; set; }
         public decimal PricePerDay  { get; set; }
+
     }
 }

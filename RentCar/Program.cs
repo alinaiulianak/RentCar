@@ -102,18 +102,130 @@ namespace RentCar
             switch (vMenu)
             {
                 case 1:
-                    //Console.WriteLine("Register new Cart Rent");
-                    Console.Write("Cart Id:");
-                    Reservations myReservation = new Reservations ();
+                    ////Console.WriteLine("Register new Cart Rent");
+                    //Console.Write("Cart Id:");
+                    //Reservations myReservation = new Reservations ();
                     //myReservation .CarID= int.Parse (Console.ReadLine());
                     //Console.Write("Client ID:");
-                    //myReservation.CostumerID = Console.ReadLine();
-                    Console.Write("Start Date:");
-                    myReservation.StartDate  = DateTime.Parse (Console.ReadLine());
-                    Console.Write("End Date:");
-                    myReservation.EndDate  = DateTime.Parse(Console.ReadLine());
+                    //myReservation.CostumerID = int.Parse(Console.ReadLine());
+                    //Console.Write("Start Date:");
+                    //myReservation.StartDate  = DateTime.Parse (Console.ReadLine());
+                    //Console.Write("End Date:");
+                    //myReservation.EndDate  = DateTime.Parse(Console.ReadLine());
+                    //Console.Write("City:");
+                    //myReservation.Location = Console.ReadLine();
+
+                    Console.Write("Cart Id:");
+                    int txt_CarID = int.Parse(Console.ReadLine());
+                    Console.Write("Client ID:");
+                    int txt_CostumerID = int.Parse(Console.ReadLine());
+                    Console.Write("Start Date (e.g. 10/22/1987):");
+                    DateTime txt_StartDate;
+                    if ( (DateTime.TryParse(Console.ReadLine(), out txt_StartDate))==false)
+                     {
+                        Console.WriteLine("You have entered an incorrect value.");
+                    }
+                    //DateTime txt_StartDate = DateTime.Parse(Console.ReadLine());
+                    Console.Write("End Date (e.g. 10/22/1987):");
+                    //DateTime txt_EndDate = DateTime.Parse(Console.ReadLine());
+                    DateTime txt_EndDate;
+                    if ((DateTime.TryParse(Console.ReadLine(), out txt_EndDate)) == false)
+                    {
+                        Console.WriteLine("You have entered an incorrect value.");
+                    }
+                    else
+                    {
+                        if (txt_StartDate <=txt_EndDate)
+                        {
+                            // Doyour stuff.
+                        }
+                        else
+                        {
+                            Console.WriteLine("You have entered an incorrect value.");
+                        }
+                    }
+
+
                     Console.Write("City:");
-                    myReservation.Location = Console.ReadLine();
+                    string txt_Location = Console.ReadLine();
+
+                    //''''''
+                    //int txt_ReservStatsID = 1;
+                    //string txt_CouponCode = "0I0J93K";
+                    SqlConnection con;
+                    SqlCommand com;
+                    SqlDataReader reader, carId_reader, CostumerId_reader;
+
+                    con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+
+                    con.Open();
+
+                    //•	If the Car Model exists and is available
+                    carId_reader = new SqlCommand("select * from Cars where CarID = "+ txt_CarID, con).ExecuteReader();
+                   
+                    if (carId_reader.HasRows)
+
+                    {
+
+                        while (carId_reader.Read())
+
+                        {
+
+                            //com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location, ReservStatsID, CouponCode) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location, @ReservStatsID, @CouponCode)", con);
+                            com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
+
+                            com.Parameters.Add("@CarID", txt_CarID);
+                            com.Parameters.Add("@CostumerID", txt_CostumerID);
+                            com.Parameters.Add("@StartDate", txt_StartDate);
+                            com.Parameters.Add("@EndDate", txt_EndDate);
+                            com.Parameters.Add("@Location", txt_Location);
+                            //com.Parameters.Add("@ReservStatsID", txt_ReservStatsID);
+                            //com.Parameters.Add("@CouponCode", txt_CouponCode);
+                            com.ExecuteNonQuery();
+
+
+                        }
+
+                    }
+
+                    else
+
+                    {
+
+                        Console.WriteLine("No car found.");
+
+                    }
+
+                    carId_reader.Close();
+
+                    
+                    //reader = new SqlCommand("select * from Reservations where CostumerID =1", con).ExecuteReader();
+
+
+
+                    //if (reader.HasRows)
+
+                    //{
+
+                    //    while (reader.Read())
+
+                    //    {
+
+                    //        Console.WriteLine("CostumerID |CarID  \n {0}  |   {1}  ", reader.GetInt32(0), reader.GetInt32(0));
+
+                    //    }
+
+                    //}
+
+                    //else
+
+                    //{
+
+                    //    Console.WriteLine("No rows found.");
+
+                    //}
+
+                    //reader.Close();
                     break;
                 case 2:
                     Console.WriteLine("Update Car Rent");
@@ -158,7 +270,7 @@ namespace RentCar
             var result = Console.ReadLine();
             return Convert.ToInt32(result);
         }
-
+        
         private static void MenuScreen()
         {
             int vMenu = DisplayMenu();
