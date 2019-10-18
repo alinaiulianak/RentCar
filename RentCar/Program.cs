@@ -54,11 +54,13 @@ namespace RentCar
                         con = new SqlConnection(Properties.Settings.Default.ConnectionString);
                          con.Open();
 
-                 
+                   
 
-                        if (myReservation.IsCarIDValid() && myReservation .IsCustomerIDValid () && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid() && myReservation.IsDataStartValid())
+
+                        if (myReservation.IsCarIDValid() && myReservation.IsCustomerIDValid () && myReservation.IsCarAvailable () && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid() && myReservation.IsDataStartValid())
                         {
-                        
+                            
+
                             com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
 
                             com.Parameters.Add("@CarID", myReservation.txt_CarID);

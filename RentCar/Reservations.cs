@@ -37,7 +37,8 @@ namespace RentCar
 
             Console.Write("Start Date (e.g. 10/22/1987):");
             consoleDataStart= Console.ReadLine().ToString();
-       
+
+
             Console.Write("End Date (e.g. 10/22/1987):");
             consoleDataEnd = Console.ReadLine().ToString();
 
@@ -281,6 +282,44 @@ namespace RentCar
 
         }
 
+        public bool IsCarAvailable()
+        {
+            SqlConnection con;
+            SqlDataReader carId_reader;
+            
+            try
+            {
+                con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                con.Open();
 
+                carId_reader = new SqlCommand("select * from Reservations where CarID =" + consoleCarID + " and StartDate<'"+ DateTime.Parse(consoleDataStart) + "' and EndDate>'" + DateTime.Parse(consoleDataStart) + "'", con).ExecuteReader();
+
+                if (carId_reader.HasRows)
+                    {
+                        Console.WriteLine("This car is not available in this period!");
+                        return false;
+
+                    }
+                 else
+
+                    {
+                    
+                        return true;
+                    }
+               
+                carId_reader.Close();
+            }
+
+
+            catch (Exception ex)
+
+            {
+
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+            con.Close();
+
+        }
     }
 }
