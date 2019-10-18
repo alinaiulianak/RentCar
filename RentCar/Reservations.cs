@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace RentCar
 {
@@ -20,86 +21,265 @@ namespace RentCar
          public string  Location { get; set; }
         public Coupons  CouponCode { get; set; }
 
+        public int txt_CarID, txt_CostumerID;
+        public DateTime txt_StartDate, txt_EndDate;
+        public string txt_Location;
+        public string consoleCarID , consoleCustomerID, consoleLocation, consoleDataStart, consoleDataEnd;
 
-        public void AddCarRent()
+        public void AddRent()
         {
-            
+      
             Console.Write("Cart Id:");
-           int txt_CarID= int.Parse(Console.ReadLine());
+            consoleCarID = Console.ReadLine().ToString();
+
             Console.Write("Client ID:");
-            int txt_CostumerID = int.Parse(Console.ReadLine());
-            Console.Write("Start Date:");
-            DateTime txt_StartDate = DateTime.Parse(Console.ReadLine());
-            Console.Write("End Date:");
-            DateTime txt_EndDate = DateTime.Parse(Console.ReadLine());
+            consoleCustomerID = Console.ReadLine().ToString();
+
+            Console.Write("Start Date (e.g. 10/22/1987):");
+            consoleDataStart= Console.ReadLine().ToString();
+       
+            Console.Write("End Date (e.g. 10/22/1987):");
+            consoleDataEnd = Console.ReadLine().ToString();
+
             Console.Write("City:");
-            string txt_Location = Console.ReadLine();
+            consoleLocation = Console.ReadLine();
+        }
 
-           SqlConnection con;
-           SqlCommand com;
-           con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+        public bool IsDataStartValid()
+        {
+            if (consoleDataStart == "")
+            {
+                Console.WriteLine("Please enter a start date!");
+                return false;
+            }
+            else if ((DateTime.TryParse(consoleDataStart, out txt_StartDate)) == false)
+            {
+                Console.WriteLine("You have entered an incorrect value.");
+                return false;
+            }
+            else
+            {
+                txt_StartDate = DateTime.Parse(consoleDataStart);
+                return true;
+            }
+        }
 
-           con.Open();
+        public bool IsDataEndValid()
+        {
+            if (consoleDataEnd == "")
+            {
+                Console.WriteLine("Please enter end date!");
+                return false;
+            }
+            else if ((DateTime.TryParse(consoleDataEnd, out txt_EndDate)) == false)
+            {
+                Console.WriteLine("You have entered an incorrect value.");
+                return false;
+            }
+            else
+            {
+                txt_EndDate = DateTime.Parse(consoleDataEnd);
+                if (txt_StartDate <= txt_EndDate)
+                {
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("You have entered an incorrect value.");
+                    return false;
+                }
+            }
+            
+          
+        }
+            
+        public bool IsCarIDValid()
+        {
+            SqlConnection con;
+            SqlDataReader carId_reader;
+                       ;
+            try
+            {
+                con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                con.Open();
 
-           com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
-           com.Parameters.Add("@CarID", txt_CarID);
-            com.Parameters.Add("@CostumerID", txt_CostumerID);
-            com.Parameters.Add("@StartDate", txt_StartDate);
-            com.Parameters.Add("@EndDate", txt_EndDate);
-            com.Parameters.Add("@Location", txt_Location);
-            com.ExecuteNonQuery();
 
 
+                if (consoleCarID == "")
+                {
+                    Console.WriteLine("Please specify the Cart ID!");
+                    return false;
+                }
+
+                // Check for characters other than integers.
+                else if (Regex.IsMatch(consoleCarID.ToString(), @"^\D*$"))
+                {
+                    // Show message and clear input.
+                    Console.WriteLine("Cart ID must contain only numbers!");
+                    return false;
+                }
+                else
+                {
+                    //•	If the Car Model exists and is available
+                    carId_reader = new SqlCommand("select * from Cars where CarID = " + consoleCarID, con).ExecuteReader();
+
+                    if (carId_reader.HasRows)
+                    {
+                        txt_CarID = Int32.Parse(consoleCarID);
+                        return true;
+
+                    }
+
+                    else
+
+                    {
+
+                        Console.WriteLine("Client Id is not valid!");
+                        return false;
+                    }
+                }
+                carId_reader.Close();
+            }
+             
+
+            catch (Exception ex)
+
+            {
+
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+            con.Close();
 
         }
-        //        public int
 
-        //        SqlConnection con;
-        //        SqlDataReader reader;
-        //        try
-        //            {
-        //                con = new SqlConnection(Properties.Settings.Default.ConnectionString);
-        //                con.Open();
+        public bool IsCustomerIDValid()
+        {
+            SqlConnection con;
+            SqlCommand com;
+            SqlDataReader reader;
+            ;
+            try
+            {
+                con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                con.Open();
 
-        //                reader = new SqlCommand("select * from Cars where CarID="+ console_CarID, con).ExecuteReader();
+
+
+                if (consoleCustomerID == "")
+                {
+                    Console.WriteLine("Please create customer account before!");
+                    return false;
+                }
+
+                // Check for characters other than integers.
+                else if (Regex.IsMatch(consoleCustomerID.ToString(), @"^\D*$"))
+                {
+                    // Show message and clear input.
+                    Console.WriteLine("Customer ID must contain only numbers!");
+                    return false;
+                }
+                else
+                {
+                  
+                    reader = new SqlCommand("select * from Customers where CostumerID = " + consoleCustomerID, con).ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        txt_CostumerID = Int32.Parse(consoleCustomerID);
+                        return true;
+
+                    }
+
+                    else
+
+                    {
+
+                        Console.WriteLine("Please create customer account before!");
+                        return false;
+                    }
+                }
+                reader.Close();
+            }
+
+
+            catch (Exception ex)
+
+            {
+
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
+            con.Close();
+        }
+
+        public bool IsCarLocationValid()
+        {
+            SqlConnection con;
+            SqlCommand com;
+            SqlDataReader reader;
+           
+            try
+            {
+
+              
+                con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                con.Open();
 
 
 
-        //                if (reader.HasRows)
+                if (consoleLocation == "")
+                {
+                    Console.WriteLine("Please specify the Location!");
+                    return false;
+                }
 
-        //                {
+                // Check for characters other than integers.
+                else if (Regex.IsMatch(consoleLocation.ToString(), @"^[a-zA-Z-]+$")==false)
+                {
+                    // Show message and clear input.
+                    Console.WriteLine("Location must contain only letters!");
+                    return false;
+                }
+                else
+                {
+                 
+                    reader = new SqlCommand("select * from Cars where LocationCar =\'" + consoleLocation.ToString() + "\' and CarID =" + txt_CarID, con).ExecuteReader();
+         
+                    if (reader.HasRows)
+                    {
+                        
+                        txt_Location = consoleLocation.ToString();
+                        return true;
+                        
 
-        //                    while (reader.Read())
+                    }
 
-        //                    {
+                    else
 
-        //                        Console.WriteLine("CostumerID | Name  \n {0}  |   {1}  ", reader.GetInt32(0),
+                    {
+                        
+                        Console.WriteLine("Cart is not available in the city for the user");
+                        return false;
+                       
+                    }
+                }
+                reader.Close();
+            }
 
-        //                        reader.GetString(1));
 
-        //                    }
+            catch (Exception ex)
 
-        //}
+            {
 
-        //                else
+                Console.WriteLine(ex.Message);
+                
+                return false;
+            }
+            con.Close();
 
-        //                {
-
-        //        Console.WriteLine("No rows found.");
-
-        //    }
-
-        //    reader.Close();
-
-        //}
-
-        //catch (Exception ex)
-
-        //{
-
-        //    Console.WriteLine(ex.Message);
-
-        //}
+        }
 
 
     }
