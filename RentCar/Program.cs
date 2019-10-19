@@ -36,80 +36,144 @@ namespace RentCar
             } while ((KeyM.Key != ConsoleKey.Enter) && (KeyM.Key != ConsoleKey.Escape));
 
 
-
-
-            int vMenu = DisplayMenu();
-            switch (vMenu)
+            int vMenu;
+            SqlConnection con;
+            SqlCommand com;
+            do
             {
-                case 1:
-                    Console.Clear();
-                    Reservations myReservation = new Reservations();
-                    myReservation.AddRent();
-                   
-                    SqlConnection con;
-                    SqlCommand com;
+                vMenu = DisplayMenu();
+                switch (vMenu)
+                {
+                    case 1:
+                        Console.Clear();
+                        Console.WriteLine("Register new Cart Rent ");
+                        Reservations myReservation = new Reservations();
+                        myReservation.AddRent();
 
-                    try
-                    {
-                        con = new SqlConnection(Properties.Settings.Default.ConnectionString);
-                         con.Open();
+                        //SqlConnection con;
+                        //SqlCommand com;
 
-                   
-
-
-                        if (myReservation.IsCarIDValid() && myReservation.IsCustomerIDValid () && myReservation.IsCarAvailable () && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid() && myReservation.IsDataStartValid())
+                        try
                         {
-                            
+                            con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                            con.Open();
 
-                            com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
 
-                            com.Parameters.Add("@CarID", myReservation.txt_CarID);
-                            com.Parameters.Add("@CostumerID", myReservation.txt_CostumerID);
-                            com.Parameters.Add("@StartDate", myReservation.txt_StartDate);
-                            com.Parameters.Add("@EndDate", myReservation.txt_EndDate);
-                            com.Parameters.Add("@Location", myReservation.txt_Location);
-                            com.ExecuteNonQuery();
-                            Console.WriteLine("Success  register a new cart rent!");
+
+
+                            if (myReservation.IsCarIDValid() && myReservation.IsCustomerIDValid() && myReservation.IsCarAvailable() && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid() && myReservation.IsDataStartValid())
+                            {
+
+
+                                com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
+
+                                com.Parameters.Add("@CarID", myReservation.txt_CarID);
+                                com.Parameters.Add("@CostumerID", myReservation.txt_CostumerID);
+                                com.Parameters.Add("@StartDate", myReservation.txt_StartDate);
+                                com.Parameters.Add("@EndDate", myReservation.txt_EndDate);
+                                com.Parameters.Add("@Location", myReservation.txt_Location);
+                                com.ExecuteNonQuery();
+                                Console.WriteLine("Success  register a new cart rent!");
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error! Please try again! ");
+                            }
+                            Console.ReadLine();
+                            con.Close();
                         }
-                        con.Close();
-                    }
 
 
-                    catch (Exception ex)
+                        catch (Exception ex)
 
-                    {
+                        {
 
-                        Console.WriteLine(ex.Message);
-                      
-                    }
-                                        
-                    break;
-                case 2:
-                    Console.WriteLine("Update Car Rent");
-                    break;
-                case 3:
-                    Console.WriteLine("List Rents");
-                    break;
-                case 4:
-                    Console.WriteLine("List Available Cars");
-                    break;
-                case 5:
-                    Console.WriteLine("Register new Customer");
-                    break;
-                case 6:
-                    Console.WriteLine("Update Customer");
-                    break;
-                case 7:
-                    Console.WriteLine("List Customer");
-                    break;
-                case 8:
-                    Console.WriteLine("Quit");
-                    break;
-                default:
-                    Console.WriteLine("This is not a valid option.");
-                    break;
-            }
+                            Console.WriteLine(ex.Message);
+                            Console.ReadLine();
 
+                        }
+
+                        break;
+                    case 2:
+                        Console.WriteLine("Update Car Rent");
+                        break;
+                    case 3:
+                        Console.WriteLine("List Rents");
+                        break;
+                    case 4:
+                        Console.WriteLine("List Available Cars");
+                        break;
+                    case 5:
+
+                        Console.Clear();
+                        Console.WriteLine("Register new Customer:");
+                        Customers  myCustomer = new Customers();
+                        myCustomer.AddCustomer();
+
+                       
+
+                        try
+                        {
+                            con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                            con.Open();
+
+
+
+
+                            if (myCustomer.IsClientIDValid() && myCustomer.IsZipValid() && myCustomer.BirthDateValid() && myCustomer.IsNameValid())
+                            {
+                                
+                                
+                                
+                                com = new SqlCommand("insert into Customers (CostumerID, Name, BirthDate, ZIPCode) values (@CostumerID, @Name, @BirthDate, @ZIPCode)", con);
+
+                                com.Parameters.Add("@CostumerID", myCustomer.txt_CostumerID);
+                                com.Parameters.Add("@Name", myCustomer.txt_Name);
+                                com.Parameters.Add("@BirthDate", myCustomer.txt_BirthDate);
+                                com.Parameters.Add("@ZIPCode", myCustomer.txt_Location);
+                                com.CommandText = "SET IDENTITY_INSERT Customers ON";
+                                com.ExecuteNonQuery();
+                                Console.WriteLine("Success  register a new customer!");
+
+                                com.CommandText = "SET IDENTITY_INSERT Customers OFF";
+                                com.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error! Please try again! ");
+                            }
+                            Console.ReadLine();
+                            con.Close();
+                        }
+
+
+                        catch (Exception ex)
+
+                        {
+
+                            Console.WriteLine(ex.Message);
+                            Console.ReadLine();
+
+                        }
+
+                        break;
+                    case 6:
+                        Console.WriteLine("Update Customer");
+                        break;
+                    case 7:
+                        Console.WriteLine("List Customer");
+                        break;
+                    case 8:
+                        Console.WriteLine("Quit");
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("This is not a valid option.");
+                        Console.ReadLine();
+                        break;
+                }
+            } while (vMenu!=8);
 
             Console.ReadLine();
         }
