@@ -46,21 +46,21 @@ namespace RentCar
             consoleLocation = Console.ReadLine();
         }
 
-        public bool IsDataStartValid()
+        public bool IsDataStartValid(string DataS, DateTime DataExit)
         {
-            if (consoleDataStart == "")
+            if (DataS == "")
             {
                 Console.WriteLine("Please enter a start date!");
                 return false;
             }
-            else if ((DateTime.TryParse(consoleDataStart, out txt_StartDate)) == false)
+            else if ((DateTime.TryParse(DataS, out DataExit)) == false)
             {
                 Console.WriteLine("You have entered an incorrect value.");
                 return false;
             }
             else
             {
-                txt_StartDate = DateTime.Parse(consoleDataStart);
+                DataExit = DateTime.Parse(DataS);
                 return true;
             }
         }
@@ -93,12 +93,11 @@ namespace RentCar
             
           
         }
-            
-        public bool IsCarIDValid()
+        public bool IsCarIDValid( string CartID)
         {
             SqlConnection con;
             SqlDataReader carId_reader;
-                       ;
+          
             try
             {
                 con = new SqlConnection(Properties.Settings.Default.ConnectionString);
@@ -106,14 +105,14 @@ namespace RentCar
 
 
 
-                if (consoleCarID == "")
+                if (CartID == "")
                 {
                     Console.WriteLine("Please specify the Cart ID!");
                     return false;
                 }
 
                 // Check for characters other than integers.
-                else if (Regex.IsMatch(consoleCarID.ToString(), @"^\D*$"))
+                else if (Regex.IsMatch(CartID.ToString(), @"^\D*$"))
                 {
                     // Show message and clear input.
                     Console.WriteLine("Cart ID must contain only numbers!");
@@ -122,11 +121,11 @@ namespace RentCar
                 else
                 {
                     //•	If the Car Model exists and is available
-                    carId_reader = new SqlCommand("select * from Cars where CarID = " + consoleCarID, con).ExecuteReader();
+                    carId_reader = new SqlCommand("select * from Cars where CarID = " + CartID, con).ExecuteReader();
 
                     if (carId_reader.HasRows)
                     {
-                        txt_CarID = Int32.Parse(consoleCarID);
+                       
                         return true;
 
                     }
@@ -135,13 +134,13 @@ namespace RentCar
 
                     {
 
-                        Console.WriteLine("Client Id is not valid!");
+                        Console.WriteLine("Car Id is not valid!");
                         return false;
                     }
                 }
                 carId_reader.Close();
             }
-             
+
 
             catch (Exception ex)
 
@@ -153,8 +152,9 @@ namespace RentCar
             con.Close();
 
         }
+       
 
-        public bool IsCustomerIDValid()
+        public bool IsCustomerIDValid( string Customer)
         {
             SqlConnection con;
             SqlCommand com;
@@ -167,14 +167,14 @@ namespace RentCar
 
 
 
-                if (consoleCustomerID == "")
+                if (Customer == "")
                 {
                     Console.WriteLine("Please create customer account before!");
                     return false;
                 }
 
                 // Check for characters other than integers.
-                else if (Regex.IsMatch(consoleCustomerID.ToString(), @"^\D*$"))
+                else if (Regex.IsMatch(Customer.ToString(), @"^\D*$"))
                 {
                     // Show message and clear input.
                     Console.WriteLine("Customer ID must contain only numbers!");
@@ -182,12 +182,12 @@ namespace RentCar
                 }
                 else
                 {
-                  
-                    reader = new SqlCommand("select * from Customers where CostumerID = " + consoleCustomerID, con).ExecuteReader();
+
+                    reader = new SqlCommand("select * from Customers where CostumerID = " + Customer, con).ExecuteReader();
 
                     if (reader.HasRows)
                     {
-                        txt_CostumerID = Int32.Parse(consoleCustomerID);
+                        
                         return true;
 
                     }
@@ -214,7 +214,6 @@ namespace RentCar
 
             con.Close();
         }
-
         public bool IsCarLocationValid()
         {
             SqlConnection con;
@@ -237,7 +236,7 @@ namespace RentCar
                 }
 
                 // Check for characters other than integers.
-                else if (Regex.IsMatch(consoleLocation.ToString(), @"^[a-zA-Z-]+$")==false)
+                else if (Regex.IsMatch(consoleLocation.ToString(), @"^[a-zA-Z- ]+$")==false)
                 {
                     // Show message and clear input.
                     Console.WriteLine("Location must contain only letters!");

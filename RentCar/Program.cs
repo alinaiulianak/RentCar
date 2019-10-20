@@ -39,6 +39,8 @@ namespace RentCar
             int vMenu;
             SqlConnection con;
             SqlCommand com;
+            SqlDataReader reader;
+
             do
             {
                 vMenu = DisplayMenu();
@@ -61,9 +63,12 @@ namespace RentCar
 
 
 
-                            if (myReservation.IsCarIDValid() && myReservation.IsCustomerIDValid() && myReservation.IsCarAvailable() && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid() && myReservation.IsDataStartValid())
+                            if (myReservation.IsCarIDValid(myReservation.consoleCarID) && myReservation.IsCustomerIDValid(myReservation.consoleCustomerID)
+                                && myReservation.IsCarAvailable() && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid()
+                                && myReservation.IsDataStartValid(myReservation.consoleDataStart,myReservation .txt_StartDate))
                             {
-
+                                myReservation.txt_CarID = Int32.Parse(myReservation.consoleCarID);
+                                myReservation.txt_CostumerID = Int32.Parse(myReservation.consoleCustomerID);
 
                                 com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
 
@@ -96,7 +101,170 @@ namespace RentCar
 
                         break;
                     case 2:
-                        Console.WriteLine("Update Car Rent");
+                        Console.Clear();
+                        Console.WriteLine("Update Cart Rent");
+
+                        Reservations UpdateRentItem = new Reservations();
+                        Console.WriteLine("All cart rent:");
+                        OutputTable("select CarID, CostumerID, StartDate, EndDate,Location from Reservations ", true);
+                        Console.WriteLine("   ");
+                        Console.WriteLine("Which Cart Rent would you like to update?");
+
+                        Console.Write("Cart ID:");
+                        int consoleUpdateCar=0 ;
+
+                        if (UpdateRentItem.IsCarIDValid(Console.ReadLine()))
+                        {
+                            consoleUpdateCar = Int32.Parse(Console.ReadLine());
+
+                        }
+                        Console.Write("Client ID:");
+                        int consoleUpdateClient = 0;
+                        if (UpdateRentItem.IsCustomerIDValid(Console.ReadLine()))
+                        {
+                            consoleUpdateClient = Int32.Parse(Console.ReadLine());
+
+                        }
+
+                        Console.Write("StartDate:");
+                        DateTime consoleUpdateStart = DateTime.Now;
+                        if (UpdateRentItem.IsDataStartValid(Console.ReadLine(), consoleUpdateStart))
+                        {
+                            consoleUpdateStart = DateTime.Parse(Console.ReadLine());
+                        }
+                        //Reservations myReservation = new Reservations();
+                        //myReservation.AddRent();
+
+                        //SqlConnection con;
+                        //SqlCommand com;
+
+                        try
+                        {
+                            if (UpdateRentItem.IsCarIDValid(Console.ReadLine()) && UpdateRentItem.IsDataStartValid(Console.ReadLine(), consoleUpdateStart) && UpdateRentItem.IsCustomerIDValid(Console.ReadLine()))
+                            {
+                                con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                                con.Open();
+                                reader = new SqlCommand("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + consoleUpdateCar + " and CostumerID=" + consoleUpdateClient + " and StartDate='" + consoleUpdateStart + "'", con).ExecuteReader();
+
+                                while (reader.Read())
+                                {
+                                    //int n = 0;
+                                    //for (int i = 0; i < reader.FieldCount; i++)
+                                    //{
+                                    //    Console.WriteLine(i + " " + reader.GetName(i) + ": " + reader.GetValue(i));
+                                    //    Console.WriteLine(String.Format("\r{0}, \r{1}", reader[0], reader[1]));
+                                    //    //              Console.WriteLine("{0}\t{1}", reader.GetInt32(0),
+                                    //    //reader.GetInt32(1) );
+
+                                    //}
+                                    OutputTable("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + consoleUpdateCar + " and CostumerID=" + consoleUpdateClient + " and StartDate='" + consoleUpdateStart + "'", true);
+                                }
+                                con.Close();
+                            }
+                            else
+                            {
+                                Console.Write("Error! Update failed!");
+                            }
+                            //int columnCount = reader.FieldCount;
+
+                            //List<List<string>> output = new List<List<string>>();
+
+                            ////if (showHeader)
+                            ////{
+                            //    List<string> values = new List<string>();
+                            //    for (int count = 0; count < columnCount; ++count)
+                            //    {
+                            //        values.Add(string.Format("{0}", reader.GetName(count)));
+                            //    }
+                            //    output.Add(values);
+                            ////}
+
+                            //while (reader.Read())
+                            //{
+                            //    List<string> values1 = new List<string>();
+                            //    for (int count = 0; count < columnCount; ++count)
+                            //    {
+                            //        values1.Add(string.Format("{0}", reader[count]));
+                            //    }
+                            //    output.Add(values1);
+                            //}
+                            //reader.Close();
+
+                            //List<int> widths = new List<int>();
+                            //for (int count = 0; count < columnCount; ++count)
+                            //{
+                            //    widths.Add(0);
+                            //}
+
+                            //foreach (List<string> row in output)
+                            //{
+                            //    for (int count = 0; count < columnCount; ++count)
+                            //    {
+                            //        widths[count] = Math.Max(widths[count], row[count].Length);
+                            //    }
+                            //}
+
+                            ////int totalWidth = widths.Sum() + (widths.Count * 1) * 3;
+                            ////Console.SetWindowSize(Math.Max(Console.WindowWidth, totalWidth), Console.WindowHeight);
+
+                            //foreach (List<string> row in output)
+                            //{
+                            //    StringBuilder outputLine = new StringBuilder();
+
+                            //    for (int count = 0; count < columnCount; ++count)
+                            //    {
+                            //        if (count > 0)
+                            //        {
+                            //            outputLine.Append(" ");
+                            //        }
+                            //        else
+                            //        {
+                            //            outputLine.Append("| ");
+                            //        }
+                            //        string value = row[count];
+                            //        outputLine.Append(value.PadLeft(widths[count]));
+                            //        outputLine.Append(" |");
+                            //    }
+
+                            //    Console.WriteLine("{0}", outputLine.ToString());
+                            //}
+
+                            //}
+
+
+                            //if (myReservation.IsCarIDValid() && myReservation.IsCustomerIDValid() && myReservation.IsCarAvailable() && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid() && myReservation.IsDataStartValid())
+                            //{
+
+
+                            //    com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
+
+                            //    com.Parameters.Add("@CarID", myReservation.txt_CarID);
+                            //    com.Parameters.Add("@CostumerID", myReservation.txt_CostumerID);
+                            //    com.Parameters.Add("@StartDate", myReservation.txt_StartDate);
+                            //    com.Parameters.Add("@EndDate", myReservation.txt_EndDate);
+                            //    com.Parameters.Add("@Location", myReservation.txt_Location);
+                            //    com.ExecuteNonQuery();
+                            //    Console.WriteLine("Success  register a new cart rent!");
+
+                            //}
+                            //else
+                            //{
+                            //    Console.WriteLine("Error! Please try again! ");
+                            //}
+                            Console.ReadLine();
+                            
+                        }
+
+
+                        catch (Exception ex)
+
+                        {
+
+                            Console.WriteLine(ex.Message);
+                            Console.ReadLine();
+
+                        }
+
                         break;
                     case 3:
                         Console.WriteLine("List Rents");
@@ -228,6 +396,89 @@ namespace RentCar
                     break;
             }
 
+        }
+        //private static void OutputTable()
+        //{
+
+           
+
+        //    con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+        //    con.Open();
+        //    reader = new SqlCommand("select CarID, CostumerID, StartDate, EndDate,Location from Reservations ", con).ExecuteReader();
+
+        //    int columnCount = reader.FieldCount;
+            private static void OutputTable(string query, bool showHeader)
+        {
+            SqlConnection con= new SqlConnection(Properties.Settings.Default.ConnectionString);
+            //SqlCommand com;
+            SqlDataReader reader;
+
+            SqlCommand com = con.CreateCommand();
+            com.CommandText = query;
+            con.Open();
+            reader = com.ExecuteReader();
+            int columnCount = reader.FieldCount;
+
+            List<List<string>> output = new List<List<string>>();
+
+          
+            List<string> values = new List<string>();
+                for (int count = 0; count < columnCount; ++count)
+                {
+                    values.Add(string.Format("{0}", reader.GetName(count)));
+                }
+                output.Add(values);
+           
+
+            while (reader.Read())
+            {
+                List<string> values1 = new List<string>();
+                for (int count = 0; count < columnCount; ++count)
+                {
+                    values1.Add(string.Format("{0}", reader[count]));
+                }
+                output.Add(values1);
+            }
+            reader.Close();
+
+            List<int> widths = new List<int>();
+            for (int count = 0; count < columnCount; ++count)
+            {
+                widths.Add(0);
+            }
+
+            foreach (List<string> row in output)
+            {
+                for (int count = 0; count < columnCount; ++count)
+                {
+                    widths[count] = Math.Max(widths[count], row[count].Length);
+                }
+            }
+
+            //int totalWidth = widths.Sum() + (widths.Count * 1) * 3;
+            //Console.SetWindowSize(Math.Max(Console.WindowWidth, totalWidth), Console.WindowHeight);
+
+            foreach (List<string> row in output)
+            {
+                StringBuilder outputLine = new StringBuilder();
+
+                for (int count = 0; count < columnCount; ++count)
+                {
+                    if (count > 0)
+                    {
+                        outputLine.Append(" ");
+                    }
+                    else
+                    {
+                        outputLine.Append("| ");
+                    }
+                    string value = row[count];
+                    outputLine.Append(value.PadLeft(widths[count]));
+                    outputLine.Append(" |");
+                }
+
+                Console.WriteLine("{0}", outputLine.ToString());
+            }
         }
     }
 }
