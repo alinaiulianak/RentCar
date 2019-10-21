@@ -200,10 +200,14 @@ namespace RentCar
 
                         break;
                     case 3:
+                        Console.Clear();
                         Console.WriteLine("List Rents");
+                        OutputTable("select CarID, CostumerID, StartDate, EndDate,Location from Reservations ", true);
                         break;
                     case 4:
+                        Console.Clear();
                         Console.WriteLine("List Available Cars");
+                        OutputTable("select * from Cars ", true);
                         break;
                     case 5:
 
@@ -291,19 +295,20 @@ namespace RentCar
                                     OutputTable("select CostumerID, Name, BirthDate, ZIPCode from Customers where CostumerID=" + Int32.Parse(consoleUpdateCustomer), true);
                                     UpdateCustomer.AddCustomer();
 
-                                    if (UpdateCustomer.IsClientIDValid(UpdateCustomer.consoleClientID) && UpdateCustomer.IsZipValid() && UpdateCustomer.BirthDateValid() && UpdateCustomer.IsNameValid())
+                                    if  (UpdateCustomer.IsZipValid() && UpdateCustomer.BirthDateValid() && UpdateCustomer.IsNameValid())
                                     {
                                         
                                         reader.Close();
-
-                                        com = new SqlCommand("Update Customers SET CostumerID=@CostumerID, Name='@Name', BirthDate='@BirthDate', ZIPCode='@ZIPCode' where CostumerID=" + Int32.Parse(consoleUpdateCustomer), con);
-                                        Console.WriteLine("Update Customers SET CostumerID="+UpdateCustomer.txt_CostumerID+", Name='"+UpdateCustomer.txt_Name+"', BirthDate='"+UpdateCustomer.txt_BirthDate+"', ZIPCode='"+UpdateCustomer.txt_Location +"' where CostumerID=" + Int32.Parse(consoleUpdateCustomer));
-                                        com.Parameters.Add("@CostumerID", UpdateCustomer.txt_CostumerID);
+                                    
+                                        com = new SqlCommand("SET IDENTITY_INSERT dbo.Customers ON; Update dbo.Customers SET  Name=@Name,  BirthDate=@BirthDate, ZIPCode=@ZIPCode where CostumerID=" + Int32.Parse(consoleUpdateCustomer), con);
+                                       Console.WriteLine("Update Customers SET  Name='"+UpdateCustomer.txt_Name+"', BirthDate='"+UpdateCustomer.txt_BirthDate+"', ZIPCode='"+UpdateCustomer.txt_Location +"' where CostumerID=" + Int32.Parse(consoleUpdateCustomer));
+                                        //com.Parameters.Add("@CostumerID", UpdateCustomer.txt_CostumerID);
                                         com.Parameters.Add("@Name", UpdateCustomer.txt_Name);
                                         com.Parameters.Add("@BirthDate", UpdateCustomer.txt_BirthDate);
                                         com.Parameters.Add("@ZIPCode", UpdateCustomer.txt_Location);
-                                        com.CommandText = "SET IDENTITY_INSERT Customers ON";
-                                        com.ExecuteNonQuery();
+
+                                        //com.CommandText = "SET IDENTITY_INSERT dbo.Customers ON";
+                                        int rows = com.ExecuteNonQuery();
                                         Console.WriteLine("Success  update this customer!");
                                         OutputTable("select CostumerID, Name, BirthDate, ZIPCode from Customers where CostumerID=" + Int32.Parse(consoleUpdateCustomer), true);
                                         com.CommandText = "SET IDENTITY_INSERT Customers OFF";
@@ -344,7 +349,10 @@ namespace RentCar
                         }
                         break;
                     case 7:
-                        Console.WriteLine("List Customer");
+                       
+                        Console.Clear();
+                        Console.WriteLine("List Customers");
+                        OutputTable("select * from Customers ", true);
                         break;
                     case 8:
                         Console.WriteLine("Quit");
@@ -493,6 +501,7 @@ namespace RentCar
 
                 Console.WriteLine("{0}", outputLine.ToString());
             }
+            Console.ReadLine();
         }
     }
 }

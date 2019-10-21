@@ -159,7 +159,7 @@ namespace RentCar
                 return false;
             }
             else if ((DateTime.TryParseExact(consoleBirthDate, formats,
-                                new System.Globalization.CultureInfo("en-IN"),
+                                new System.Globalization.CultureInfo("en-US"),
                                 DateTimeStyles.None, out txt_BirthDate)) == false)
             {
                 Console.WriteLine("Birth Date: You have entered an incorrect value.");
@@ -168,8 +168,9 @@ namespace RentCar
             }
             else
             {
+                
+                txt_BirthDate = DateTime.Parse(consoleBirthDate);
                 String.Format("{0:dd-MM-yyyy}", txt_BirthDate);
-                //txt_BirthDate = DateTime.Parse(consoleBirthDate);
                 return true;
             }
         }
@@ -208,7 +209,7 @@ namespace RentCar
                 }
 
                 // Check for characters other than integers.
-                else if (Regex.IsMatch(consoleClientName.ToString(), @"^[a-zA-Z-]+$") == false)
+                else if (Regex.IsMatch(consoleClientName.ToString(), @"^[a-zA-Z- ]+$") == false)
                 {
                     // Show message and clear input.
                     Console.WriteLine("Name must contain only letters!");
