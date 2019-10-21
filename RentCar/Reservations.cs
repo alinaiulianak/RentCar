@@ -46,40 +46,41 @@ namespace RentCar
             consoleLocation = Console.ReadLine();
         }
 
-        public bool IsDataStartValid(string DataS, DateTime DataExit)
+        public bool IsDataStartValid(string DataS)
         {
             if (DataS == "")
             {
                 Console.WriteLine("Please enter a start date!");
                 return false;
             }
-            else if ((DateTime.TryParse(DataS, out DataExit)) == false)
+            else if ((DateTime.TryParse(DataS, out txt_StartDate)) == false)
             {
                 Console.WriteLine("You have entered an incorrect value.");
                 return false;
             }
             else
             {
-                DataExit = DateTime.Parse(DataS);
+                txt_StartDate = DateTime.Parse(DataS);
+                //Console.WriteLine(DataExit);
                 return true;
             }
         }
 
-        public bool IsDataEndValid()
+        public bool IsDataEndValid(string DataS)
         {
             if (consoleDataEnd == "")
             {
                 Console.WriteLine("Please enter end date!");
                 return false;
             }
-            else if ((DateTime.TryParse(consoleDataEnd, out txt_EndDate)) == false)
+            else if ((DateTime.TryParse(DataS, out txt_EndDate)) == false)
             {
                 Console.WriteLine("You have entered an incorrect value.");
                 return false;
             }
             else
             {
-                txt_EndDate = DateTime.Parse(consoleDataEnd);
+                txt_EndDate = DateTime.Parse(DataS);
                 if (txt_StartDate <= txt_EndDate)
                 {
                     return true;
@@ -125,7 +126,7 @@ namespace RentCar
 
                     if (carId_reader.HasRows)
                     {
-                       
+                       txt_CarID = Int32.Parse(CartID);
                         return true;
 
                     }
@@ -187,7 +188,7 @@ namespace RentCar
 
                     if (reader.HasRows)
                     {
-                        
+                        txt_CostumerID = Int32.Parse(Customer);
                         return true;
 
                     }
@@ -239,18 +240,19 @@ namespace RentCar
                 else if (Regex.IsMatch(consoleLocation.ToString(), @"^[a-zA-Z- ]+$")==false)
                 {
                     // Show message and clear input.
-                    Console.WriteLine("Location must contain only letters!");
+                    Console.WriteLine("Location must contain only letters, - and spaces!");
                     return false;
                 }
                 else
                 {
                  
                     reader = new SqlCommand("select * from Cars where LocationCar =\'" + consoleLocation.ToString() + "\' and CarID =" + txt_CarID, con).ExecuteReader();
-         
+                    //Console.WriteLine("select * from Cars where LocationCar =\'" + consoleLocation.ToString() + "\' and CarID =" + txt_CarID);
                     if (reader.HasRows)
                     {
                         
                         txt_Location = consoleLocation.ToString();
+                      
                         return true;
                         
 

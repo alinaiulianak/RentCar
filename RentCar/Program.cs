@@ -64,11 +64,13 @@ namespace RentCar
 
 
                             if (myReservation.IsCarIDValid(myReservation.consoleCarID) && myReservation.IsCustomerIDValid(myReservation.consoleCustomerID)
-                                && myReservation.IsCarAvailable() && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid()
-                                && myReservation.IsDataStartValid(myReservation.consoleDataStart,myReservation .txt_StartDate))
+                                && myReservation.IsCarAvailable() && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid(myReservation.consoleDataEnd)
+                                && myReservation.IsDataStartValid(myReservation.consoleDataStart))
                             {
-                                myReservation.txt_CarID = Int32.Parse(myReservation.consoleCarID);
-                                myReservation.txt_CostumerID = Int32.Parse(myReservation.consoleCustomerID);
+                                //myReservation.txt_CarID = Int32.Parse(myReservation.consoleCarID);
+                                //myReservation.txt_CostumerID = Int32.Parse(myReservation.consoleCustomerID);
+                                //myReservation.txt_StartDate = DateTime.Parse(myReservation.consoleDataStart);
+                                //myReservation.txt_EndDate = DateTime.Parse(myReservation.consoleDataEnd);
 
                                 com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
 
@@ -110,147 +112,78 @@ namespace RentCar
                         Console.WriteLine("   ");
                         Console.WriteLine("Which Cart Rent would you like to update?");
 
+                        String consoleUpdateCar, consoleUpdateClient, consoleUpdateStart;
                         Console.Write("Cart ID:");
-                        int consoleUpdateCar=0 ;
+                        consoleUpdateCar = Console.ReadLine().ToString();
 
-                        if (UpdateRentItem.IsCarIDValid(Console.ReadLine()))
-                        {
-                            consoleUpdateCar = Int32.Parse(Console.ReadLine());
-
-                        }
                         Console.Write("Client ID:");
-                        int consoleUpdateClient = 0;
-                        if (UpdateRentItem.IsCustomerIDValid(Console.ReadLine()))
-                        {
-                            consoleUpdateClient = Int32.Parse(Console.ReadLine());
+                        consoleUpdateClient = Console.ReadLine().ToString();
 
-                        }
-
-                        Console.Write("StartDate:");
-                        DateTime consoleUpdateStart = DateTime.Now;
-                        if (UpdateRentItem.IsDataStartValid(Console.ReadLine(), consoleUpdateStart))
-                        {
-                            consoleUpdateStart = DateTime.Parse(Console.ReadLine());
-                        }
-                        //Reservations myReservation = new Reservations();
-                        //myReservation.AddRent();
-
-                        //SqlConnection con;
-                        //SqlCommand com;
+                        Console.Write("Start Date (e.g. 10/22/1987):");
+                        consoleUpdateStart = Console.ReadLine().ToString();
+                        
 
                         try
                         {
-                            if (UpdateRentItem.IsCarIDValid(Console.ReadLine()) && UpdateRentItem.IsDataStartValid(Console.ReadLine(), consoleUpdateStart) && UpdateRentItem.IsCustomerIDValid(Console.ReadLine()))
+                            DateTime updateStart=DateTime.Now;
+                            if (UpdateRentItem.IsCarIDValid(consoleUpdateCar) && UpdateRentItem.IsDataStartValid(consoleUpdateStart)  && UpdateRentItem.IsCustomerIDValid(consoleUpdateClient))
                             {
+                                //UpdateRentItem.txt_CarID = Int32.Parse(UpdateRentItem.consoleCarID);
+                                //UpdateRentItem.txt_CostumerID = Int32.Parse(UpdateRentItem.consoleCustomerID);
+                                //UpdateRentItem.txt_StartDate= DateTime.Parse(UpdateRentItem.consoleDataStart);
+                                //updateStart=DateTime .Parse(con)
+
                                 con = new SqlConnection(Properties.Settings.Default.ConnectionString);
                                 con.Open();
-                                reader = new SqlCommand("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + consoleUpdateCar + " and CostumerID=" + consoleUpdateClient + " and StartDate='" + consoleUpdateStart + "'", con).ExecuteReader();
+                                reader = new SqlCommand("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", con).ExecuteReader();
 
-                                while (reader.Read())
+                                if (reader.FieldCount != null)
                                 {
-                                    //int n = 0;
-                                    //for (int i = 0; i < reader.FieldCount; i++)
-                                    //{
-                                    //    Console.WriteLine(i + " " + reader.GetName(i) + ": " + reader.GetValue(i));
-                                    //    Console.WriteLine(String.Format("\r{0}, \r{1}", reader[0], reader[1]));
-                                    //    //              Console.WriteLine("{0}\t{1}", reader.GetInt32(0),
-                                    //    //reader.GetInt32(1) );
+                                    Console.Clear();
+                                    Console.WriteLine("Update this cart rent:");
+                                    OutputTable("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", true);
+                                    //Console.WriteLine("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'");
+                                    UpdateRentItem.AddRent();
 
-                                    //}
-                                    OutputTable("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + consoleUpdateCar + " and CostumerID=" + consoleUpdateClient + " and StartDate='" + consoleUpdateStart + "'", true);
+                                    if (UpdateRentItem.IsCarIDValid(UpdateRentItem.consoleCarID) && UpdateRentItem.IsCustomerIDValid(UpdateRentItem.consoleCustomerID)
+                                            && UpdateRentItem.IsCarAvailable() && UpdateRentItem.IsCarLocationValid() && UpdateRentItem.IsDataEndValid(UpdateRentItem.consoleDataEnd)
+                                            && UpdateRentItem.IsDataStartValid(UpdateRentItem.consoleDataStart))
+                                    {
+                                        //UpdateRentItem.txt_CarID = Int32.Parse(UpdateRentItem.consoleCarID);
+                                        //UpdateRentItem.txt_CostumerID = Int32.Parse(UpdateRentItem.consoleCustomerID);
+                                        //UpdateRentItem.txt_StartDate = DateTime.Parse(UpdateRentItem.consoleDataStart);
+                                        //UpdateRentItem.txt_EndDate = DateTime.Parse(UpdateRentItem.consoleDataEnd);
+                                        reader.Close();
+
+                                        com = new SqlCommand("Update Reservations SET CarID=@CarID, CostumerID=@CostumerID, StartDate=@StartDate, EndDate=@EndDate, Location=@Location where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", con);
+
+                                        com.Parameters.Add("@CarID", UpdateRentItem.txt_CarID);
+                                        com.Parameters.Add("@CostumerID", UpdateRentItem.txt_CostumerID);
+                                        com.Parameters.Add("@StartDate", UpdateRentItem.txt_StartDate);
+                                        com.Parameters.Add("@EndDate", UpdateRentItem.txt_EndDate);
+                                        com.Parameters.Add("@Location", UpdateRentItem.txt_Location);
+                                        com.ExecuteNonQuery();
+                                        Console.WriteLine("Success  update this cart rent!");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Update failed!");
+                                    }
                                 }
+                                else
+                                {
+                                    Console.WriteLine("This cart rent doesn't exist in database!");
+                                }
+
                                 con.Close();
+                                Console.ReadLine();
+
                             }
                             else
                             {
                                 Console.Write("Error! Update failed!");
                             }
-                            //int columnCount = reader.FieldCount;
-
-                            //List<List<string>> output = new List<List<string>>();
-
-                            ////if (showHeader)
-                            ////{
-                            //    List<string> values = new List<string>();
-                            //    for (int count = 0; count < columnCount; ++count)
-                            //    {
-                            //        values.Add(string.Format("{0}", reader.GetName(count)));
-                            //    }
-                            //    output.Add(values);
-                            ////}
-
-                            //while (reader.Read())
-                            //{
-                            //    List<string> values1 = new List<string>();
-                            //    for (int count = 0; count < columnCount; ++count)
-                            //    {
-                            //        values1.Add(string.Format("{0}", reader[count]));
-                            //    }
-                            //    output.Add(values1);
-                            //}
-                            //reader.Close();
-
-                            //List<int> widths = new List<int>();
-                            //for (int count = 0; count < columnCount; ++count)
-                            //{
-                            //    widths.Add(0);
-                            //}
-
-                            //foreach (List<string> row in output)
-                            //{
-                            //    for (int count = 0; count < columnCount; ++count)
-                            //    {
-                            //        widths[count] = Math.Max(widths[count], row[count].Length);
-                            //    }
-                            //}
-
-                            ////int totalWidth = widths.Sum() + (widths.Count * 1) * 3;
-                            ////Console.SetWindowSize(Math.Max(Console.WindowWidth, totalWidth), Console.WindowHeight);
-
-                            //foreach (List<string> row in output)
-                            //{
-                            //    StringBuilder outputLine = new StringBuilder();
-
-                            //    for (int count = 0; count < columnCount; ++count)
-                            //    {
-                            //        if (count > 0)
-                            //        {
-                            //            outputLine.Append(" ");
-                            //        }
-                            //        else
-                            //        {
-                            //            outputLine.Append("| ");
-                            //        }
-                            //        string value = row[count];
-                            //        outputLine.Append(value.PadLeft(widths[count]));
-                            //        outputLine.Append(" |");
-                            //    }
-
-                            //    Console.WriteLine("{0}", outputLine.ToString());
-                            //}
-
-                            //}
-
-
-                            //if (myReservation.IsCarIDValid() && myReservation.IsCustomerIDValid() && myReservation.IsCarAvailable() && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid() && myReservation.IsDataStartValid())
-                            //{
-
-
-                            //    com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
-
-                            //    com.Parameters.Add("@CarID", myReservation.txt_CarID);
-                            //    com.Parameters.Add("@CostumerID", myReservation.txt_CostumerID);
-                            //    com.Parameters.Add("@StartDate", myReservation.txt_StartDate);
-                            //    com.Parameters.Add("@EndDate", myReservation.txt_EndDate);
-                            //    com.Parameters.Add("@Location", myReservation.txt_Location);
-                            //    com.ExecuteNonQuery();
-                            //    Console.WriteLine("Success  register a new cart rent!");
-
-                            //}
-                            //else
-                            //{
-                            //    Console.WriteLine("Error! Please try again! ");
-                            //}
+                          
                             Console.ReadLine();
                             
                         }
@@ -289,7 +222,7 @@ namespace RentCar
 
 
 
-                            if (myCustomer.IsClientIDValid() && myCustomer.IsZipValid() && myCustomer.BirthDateValid() && myCustomer.IsNameValid())
+                            if (myCustomer.IsClientIDValid(myCustomer.consoleClientID) && myCustomer.IsZipValid() && myCustomer.BirthDateValid() && myCustomer.IsNameValid())
                             {
                                 
                                 
@@ -327,7 +260,88 @@ namespace RentCar
 
                         break;
                     case 6:
+                        Console.Clear();
                         Console.WriteLine("Update Customer");
+
+                        Customers UpdateCustomer= new Customers();
+                        Console.WriteLine("All customers:");
+                        OutputTable("select CostumerID, Name, BirthDate, ZIPCode from Customers ", true);
+                        Console.WriteLine("   ");
+                        Console.WriteLine("Which customer would you like to update?");
+
+                        String consoleUpdateCustomer;
+                        Console.Write("Customer ID:");
+                        consoleUpdateCustomer = Console.ReadLine().ToString();
+                        
+                        try
+                        {
+                            
+                            if (UpdateCustomer.ClientIDUpdate(consoleUpdateCustomer))
+                            {
+                                
+
+                                con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                                con.Open();
+                                reader = new SqlCommand("select CostumerID, Name, BirthDate, ZIPCode from Customers where CostumerID=" + Int32.Parse(consoleUpdateCustomer), con).ExecuteReader();
+
+                                if (reader.FieldCount != null)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("Update this customer:");
+                                    OutputTable("select CostumerID, Name, BirthDate, ZIPCode from Customers where CostumerID=" + Int32.Parse(consoleUpdateCustomer), true);
+                                    UpdateCustomer.AddCustomer();
+
+                                    if (UpdateCustomer.IsClientIDValid(UpdateCustomer.consoleClientID) && UpdateCustomer.IsZipValid() && UpdateCustomer.BirthDateValid() && UpdateCustomer.IsNameValid())
+                                    {
+                                        
+                                        reader.Close();
+
+                                        com = new SqlCommand("Update Customers SET CostumerID=@CostumerID, Name='@Name', BirthDate='@BirthDate', ZIPCode='@ZIPCode' where CostumerID=" + Int32.Parse(consoleUpdateCustomer), con);
+                                        Console.WriteLine("Update Customers SET CostumerID="+UpdateCustomer.txt_CostumerID+", Name='"+UpdateCustomer.txt_Name+"', BirthDate='"+UpdateCustomer.txt_BirthDate+"', ZIPCode='"+UpdateCustomer.txt_Location +"' where CostumerID=" + Int32.Parse(consoleUpdateCustomer));
+                                        com.Parameters.Add("@CostumerID", UpdateCustomer.txt_CostumerID);
+                                        com.Parameters.Add("@Name", UpdateCustomer.txt_Name);
+                                        com.Parameters.Add("@BirthDate", UpdateCustomer.txt_BirthDate);
+                                        com.Parameters.Add("@ZIPCode", UpdateCustomer.txt_Location);
+                                        com.CommandText = "SET IDENTITY_INSERT Customers ON";
+                                        com.ExecuteNonQuery();
+                                        Console.WriteLine("Success  update this customer!");
+                                        OutputTable("select CostumerID, Name, BirthDate, ZIPCode from Customers where CostumerID=" + Int32.Parse(consoleUpdateCustomer), true);
+                                        com.CommandText = "SET IDENTITY_INSERT Customers OFF";
+                                        com.ExecuteNonQuery();
+                                       
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Update failed!");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("This customer doesn't exist in database!");
+                                }
+
+                                con.Close();
+                                Console.ReadLine();
+
+                            }
+                            else
+                            {
+                                Console.Write("Error! Update failed!");
+                            }
+
+                            Console.ReadLine();
+
+                        }
+
+
+                        catch (Exception ex)
+
+                        {
+
+                            Console.WriteLine(ex.Message);
+                            Console.ReadLine();
+
+                        }
                         break;
                     case 7:
                         Console.WriteLine("List Customer");

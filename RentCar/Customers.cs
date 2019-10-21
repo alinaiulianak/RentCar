@@ -30,14 +30,14 @@ namespace RentCar
             Console.Write("Client Name:");
             consoleClientName = Console.ReadLine().ToString();
 
-            Console.Write("Birth Date (e.g. 10/22/1987):");
+            Console.Write("Birth Date (e.g. dd-MM-yyyy):");
             consoleBirthDate = Console.ReadLine().ToString();
 
             Console.Write("ZIP Code:");
             consoleZipCode = Console.ReadLine();
         }
 
-        public bool IsClientIDValid()
+        public bool IsClientIDValid(string consoleClientID)
         {
             SqlConnection con;
             SqlCommand com;
@@ -97,6 +97,57 @@ namespace RentCar
 
             con.Close();
         }
+
+        public bool ClientIDUpdate(string consoleClientID)
+        {
+            SqlConnection con;
+            SqlCommand com;
+            SqlDataReader reader;
+
+            try
+            {
+                con = new SqlConnection(Properties.Settings.Default.ConnectionString);
+                con.Open();
+
+
+
+                if (consoleClientID == "")
+                {
+                    Console.WriteLine("Please enter a client id!");
+                    return false;
+                }
+
+                // Check for characters other than integers.
+                else if (Regex.IsMatch(consoleClientID.ToString(), @"^\D*$"))
+                {
+                    // Show message and clear input.
+                    Console.WriteLine("Client ID must contain only numbers!");
+                    return false;
+                }
+                else
+                {
+
+                    
+                     txt_CostumerID = Int32.Parse(consoleClientID);
+                     return true;
+
+                  }
+                
+                reader.Close();
+            }
+
+
+            catch (Exception ex)
+
+            {
+
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+
+            con.Close();
+        }
+
         public bool BirthDateValid()
         {
             //string[] formats = {"dd-MM-yyyy hh:mm:ss",  "dd-MM-yyyy hh:mm" };
