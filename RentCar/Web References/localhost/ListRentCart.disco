@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://localhost:53807/ListRentCart.asmx?wsdl" docRef="http://localhost:53807/ListRentCart.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://localhost:53807/ListRentCart.asmx" xmlns:q1="example.abc/" binding="q1:ListRentCartSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://localhost:53807/ListRentCart.asmx" xmlns:q2="example.abc/" binding="q2:ListRentCartSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>

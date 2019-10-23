@@ -10,5 +10,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=ALINA-PC\SQLEXPRESS;Initial Catalog=Cart_Rent;Integrated Security=True</Value>
     </Setting>
+    <Setting Name="RentCar_localhost_ListRentCart" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost:53807/ListRentCart.asmx</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

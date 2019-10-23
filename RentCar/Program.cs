@@ -206,8 +206,22 @@ namespace RentCar
                         break;
                     case 4:
                         Console.Clear();
-                        Console.WriteLine("List Available Cars");
-                        OutputTable("select * from Cars ", true);
+                        Console.Write("List of available car in this day (e.g. 10/22/1987):");
+                        string consoleListDate= Console.ReadLine().ToString();
+
+                       
+
+                        localhost.ListRentCart obj = new localhost.ListRentCart();
+                        if (obj.IsDataValid(consoleListDate) == true)
+                        {
+                            DateTime txt_Date = DateTime.Now;
+                            txt_Date= DateTime.Parse(consoleListDate);
+                            OutputTable("select Plate, Model, StartDate, EndDate, Reservations.Location from Reservations, Cars where Reservations.CarID=Cars.CarID and ((Reservations.StartDate<'"+txt_Date+"' and Reservations.EndDate<'"+txt_Date+"') or (Reservations.StartDate>'"+ txt_Date+"' and Reservations.EndDate>'"+ txt_Date+"'))"  , true);
+                        }
+                        else
+                        { Console.Write("Error! The date is incorrect!"); }
+                        
+                        Console.ReadLine();
                         break;
                     case 5:
 

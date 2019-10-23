@@ -33,5 +33,15 @@ namespace RentCar.Properties {
                 return ((string)(this["ConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:53807/ListRentCart.asmx")]
+        public string RentCar_localhost_ListRentCart {
+            get {
+                return ((string)(this["RentCar_localhost_ListRentCart"]));
+            }
+        }
     }
 }

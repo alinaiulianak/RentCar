@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="example.abc/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="example.abc/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="example.abc/">
+      <s:element name="HelloWorld">
+        <s:complexType />
+      </s:element>
+      <s:element name="HelloWorldResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="HelloWorldResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="HelloWorld2">
+        <s:complexType />
+      </s:element>
+      <s:element name="HelloWorld2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="HelloWorld2Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsDataValid">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataS" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsDataValidResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsDataValidResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="HelloWorldSoapIn">
+    <wsdl:part name="parameters" element="tns:HelloWorld" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorldSoapOut">
+    <wsdl:part name="parameters" element="tns:HelloWorldResponse" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorld2SoapIn">
+    <wsdl:part name="parameters" element="tns:HelloWorld2" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorld2SoapOut">
+    <wsdl:part name="parameters" element="tns:HelloWorld2Response" />
+  </wsdl:message>
+  <wsdl:message name="IsDataValidSoapIn">
+    <wsdl:part name="parameters" element="tns:IsDataValid" />
+  </wsdl:message>
+  <wsdl:message name="IsDataValidSoapOut">
+    <wsdl:part name="parameters" element="tns:IsDataValidResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ListRentCartSoap">
+    <wsdl:operation name="HelloWorld">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">display List</wsdl:documentation>
+      <wsdl:input message="tns:HelloWorldSoapIn" />
+      <wsdl:output message="tns:HelloWorldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld2">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">display List</wsdl:documentation>
+      <wsdl:input message="tns:HelloWorld2SoapIn" />
+      <wsdl:output message="tns:HelloWorld2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsDataValid">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">check the date</wsdl:documentation>
+      <wsdl:input message="tns:IsDataValidSoapIn" />
+      <wsdl:output message="tns:IsDataValidSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ListRentCartSoap" type="tns:ListRentCartSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HelloWorld">
+      <soap:operation soapAction="example.abc/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld2">
+      <soap:operation soapAction="example.abc/HelloWorld2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsDataValid">
+      <soap:operation soapAction="example.abc/IsDataValid" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ListRentCartSoap12" type="tns:ListRentCartSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HelloWorld">
+      <soap12:operation soapAction="example.abc/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HelloWorld2">
+      <soap12:operation soapAction="example.abc/HelloWorld2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsDataValid">
+      <soap12:operation soapAction="example.abc/IsDataValid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ListRentCart">
+    <wsdl:port name="ListRentCartSoap" binding="tns:ListRentCartSoap">
+      <soap:address location="http://localhost:53807/ListRentCart.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ListRentCartSoap12" binding="tns:ListRentCartSoap12">
+      <soap12:address location="http://localhost:53807/ListRentCart.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
