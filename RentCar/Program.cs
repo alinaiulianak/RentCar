@@ -206,23 +206,42 @@ namespace RentCar
                         break;
                     case 4:
                         Console.Clear();
-                        Console.Write("List of available car in this day (e.g. 10/22/1987):");
-                        string consoleListDate= Console.ReadLine().ToString();
+                        Console.WriteLine("List of available car ");
+                        Console.WriteLine("-------------------------------------------------");
+                        Console.WriteLine("Please specify in which date interval do you want to see the available cars");
+                        Console.WriteLine("\n");
+                        Console.Write("Start Date (e.g. 10/22/1987):");
+                        string consoleListDateStart= Console.ReadLine().ToString();
+                        Console.Write("End Date (e.g. 10/22/1987):");
+                        string consoleListDateEnd = Console.ReadLine().ToString();
 
-                       
 
                         localhost.ListRentCart obj = new localhost.ListRentCart();
-                        if (obj.IsDataValid(consoleListDate) == true)
+                        if ((obj.IsDataValid(consoleListDateStart) == true) && (obj.IsDataValid(consoleListDateEnd) == true))
                         {
-                            DateTime txt_Date = DateTime.Now;
-                            txt_Date= DateTime.Parse(consoleListDate);
-                            OutputTable("select Plate, Model, StartDate, EndDate, Reservations.Location from Reservations, Cars where Reservations.CarID=Cars.CarID and ((Reservations.StartDate<'"+txt_Date+"' and Reservations.EndDate<'"+txt_Date+"') or (Reservations.StartDate>'"+ txt_Date+"' and Reservations.EndDate>'"+ txt_Date+"'))"  , true);
+                            DateTime txt_DateListStart = DateTime.Now;
+                            DateTime txt_DateListEnd = DateTime.Now;
+                            txt_DateListStart = DateTime.Parse(consoleListDateStart);
+                            txt_DateListEnd = DateTime.Parse(consoleListDateEnd);
+                            OutputTable("select distinct  Cars.CarID, Plate, Model,LocationCar  from Reservations, Cars  where (Cars.CarID not in (select Reservations.CarID from Reservations )) or (Cars.CarID not in (select Cars.CarID from Reservations, Cars where Reservations.CarID = Cars.CarID and ((Reservations.StartDate <= '"
+                                + txt_DateListStart+"' and Reservations.EndDate >= '"+ txt_DateListEnd+ "') or (Reservations.StartDate between '"
+                                + txt_DateListStart+"' and '"+ txt_DateListEnd+"'))))", true);
                         }
                         else
                         { Console.Write("Error! The date is incorrect!"); }
                         
                         Console.ReadLine();
                         break;
+
+//                        select Cars.CarID,Plate, Manufacturer,Model from Reservations, Cars where Reservations.CarID = Cars.CarID and Reservations.StartDate <= '9/9/2001' and Reservations.EndDate >= '9/9/2001'
+
+//select Plate, Model, StartDate, EndDate, Reservations.Location from Reservations, Cars where (Reservations.CarID = Cars.CarID and(((Reservations.StartDate < '9/9/2001' and Reservations.EndDate < '9/9/2001') or(Reservations.StartDate > '9/9/2001' and Reservations.EndDate > '9/9/2001'))))  or(Cars.CarID not in (select CarID from Reservations)) 
+
+//select* from Cars, Reservations where Cars.CarID not in (select CarID from Reservations) group by Cars.CarID
+//select* from Cars, Reservations where Cars.CarID not in Reservations.CarID
+
+//select Cars.CarID, Plate, Model, StartDate, EndDate, Reservations.Location from Cars, Reservations
+//where Cars.CarID not in(select Reservations.CarID from Reservations where  Reservations.StartDate <= '9/9/2001' and Reservations.EndDate >= '9/9/2001' group by Cars.Plate) 
                     case 5:
 
                         Console.Clear();
