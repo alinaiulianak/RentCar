@@ -8,20 +8,20 @@ using System.Text.RegularExpressions;
 
 namespace RentCar
 {
-    class Reservations
+    public class Reservations
     {
         //public Cars CarID { get; set; }
         //public Customers CostumerID { get; set; }
         //public RezervationStatuses ReservStatsID { get; set; }
         public int CarID;
-        public int CostumerID;
+        public int Id;
         public int ReservStatsID;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
          public string  Location { get; set; }
-        public Coupons  CouponCode { get; set; }
+        //public Coupons  CouponCode { get; set; }
 
-        public int txt_CarID, txt_CostumerID;
+        public int txt_CarID, txt_Id;
         public DateTime txt_StartDate, txt_EndDate;
         public string txt_Location;
         public string consoleCarID , consoleCustomerID, consoleLocation, consoleDataStart, consoleDataEnd;
@@ -46,6 +46,26 @@ namespace RentCar
             consoleLocation = Console.ReadLine();
         }
 
+        public void UpdateRent()
+        {
+
+            //Console.Write("Cart Id:");
+            //consoleCarID = Console.ReadLine().ToString();
+
+            //Console.Write("Client ID:");
+            //consoleCustomerID = Console.ReadLine().ToString();
+
+            //Console.Write("Start Date (e.g. 10/22/1987):");
+            //consoleDataStart = Console.ReadLine().ToString();
+
+
+            Console.Write("End Date (e.g. 10/22/1987):");
+            consoleDataEnd = Console.ReadLine().ToString();
+
+            Console.Write("City:");
+            consoleLocation = Console.ReadLine();
+        }
+
         public bool IsDataStartValid(string DataS)
         {
             if (DataS == "")
@@ -60,8 +80,8 @@ namespace RentCar
             }
             else
             {
-                txt_StartDate = DateTime.Parse(DataS);
-                //Console.WriteLine(DataExit);
+               
+                Console.WriteLine(txt_StartDate);
                 return true;
             }
         }
@@ -80,14 +100,16 @@ namespace RentCar
             }
             else
             {
+                
                 txt_EndDate = DateTime.Parse(DataS);
+                
                 if (txt_StartDate <= txt_EndDate)
                 {
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine("You have entered an incorrect value.");
+                    Console.WriteLine("You have entered an incorrect date value.");
                     return false;
                 }
             }
@@ -184,11 +206,11 @@ namespace RentCar
                 else
                 {
 
-                    reader = new SqlCommand("select * from Customers where CostumerID = " + Customer, con).ExecuteReader();
+                    reader = new SqlCommand("select * from Customers where Id = " + Customer, con).ExecuteReader();
 
                     if (reader.HasRows)
                     {
-                        txt_CostumerID = Int32.Parse(Customer);
+                        txt_Id = Int32.Parse(Customer);
                         return true;
 
                     }

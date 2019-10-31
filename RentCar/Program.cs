@@ -64,18 +64,19 @@ namespace RentCar
 
 
                             if (myReservation.IsCarIDValid(myReservation.consoleCarID) && myReservation.IsCustomerIDValid(myReservation.consoleCustomerID)
-                                && myReservation.IsCarAvailable() && myReservation.IsCarLocationValid() && myReservation.IsDataEndValid(myReservation.consoleDataEnd)
-                                && myReservation.IsDataStartValid(myReservation.consoleDataStart))
+                                && myReservation.IsCarAvailable()  && myReservation.IsDataStartValid(myReservation.consoleDataStart) && myReservation.IsDataEndValid(myReservation.consoleDataEnd)
+                                && myReservation.IsCarLocationValid()
+                                )
                             {
                                 //myReservation.txt_CarID = Int32.Parse(myReservation.consoleCarID);
                                 //myReservation.txt_CostumerID = Int32.Parse(myReservation.consoleCustomerID);
                                 //myReservation.txt_StartDate = DateTime.Parse(myReservation.consoleDataStart);
                                 //myReservation.txt_EndDate = DateTime.Parse(myReservation.consoleDataEnd);
 
-                                com = new SqlCommand("insert into Reservations (CarID, CostumerID, StartDate, EndDate, Location) values (@CarID, @CostumerID, @StartDate, @EndDate, @Location)", con);
+                                com = new SqlCommand("insert into Reservations (CarID, Id, StartDate, EndDate, Location) values (@CarID, @Id, @StartDate, @EndDate, @Location)", con);
 
                                 com.Parameters.Add("@CarID", myReservation.txt_CarID);
-                                com.Parameters.Add("@CostumerID", myReservation.txt_CostumerID);
+                                com.Parameters.Add("@Id", myReservation.txt_Id);
                                 com.Parameters.Add("@StartDate", myReservation.txt_StartDate);
                                 com.Parameters.Add("@EndDate", myReservation.txt_EndDate);
                                 com.Parameters.Add("@Location", myReservation.txt_Location);
@@ -108,7 +109,7 @@ namespace RentCar
 
                         Reservations UpdateRentItem = new Reservations();
                         Console.WriteLine("All cart rent:");
-                        OutputTable("select CarID, CostumerID, StartDate, EndDate,Location from Reservations ", true);
+                        OutputTable("select CarID, Id, StartDate, EndDate,Location from Reservations ", true);
                         Console.WriteLine("   ");
                         Console.WriteLine("Which Cart Rent would you like to update?");
 
@@ -132,22 +133,27 @@ namespace RentCar
                                 //UpdateRentItem.txt_CostumerID = Int32.Parse(UpdateRentItem.consoleCustomerID);
                                 //UpdateRentItem.txt_StartDate= DateTime.Parse(UpdateRentItem.consoleDataStart);
                                 //updateStart=DateTime .Parse(con)
+                                Console.WriteLine(UpdateRentItem.txt_StartDate);
+                               
+                                Console.WriteLine(UpdateRentItem.txt_EndDate);
 
                                 con = new SqlConnection(Properties.Settings.Default.ConnectionString);
                                 con.Open();
-                                reader = new SqlCommand("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", con).ExecuteReader();
+                                reader = new SqlCommand("select CarID, Id, StartDate, EndDate,Location from Reservations where CarID=" + Int32.Parse(consoleUpdateCar) + " and Id=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", con).ExecuteReader();
 
                                 if (reader.FieldCount != null)
                                 {
                                     Console.Clear();
                                     Console.WriteLine("Update this cart rent:");
-                                    OutputTable("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", true);
+                                    OutputTable("select CarID, Id, StartDate, EndDate,Location from Reservations where CarID=" + Int32.Parse(consoleUpdateCar) + " and Id=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", true);
                                     //Console.WriteLine("select CarID, CostumerID, StartDate, EndDate,Location from Reservations where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'");
-                                    UpdateRentItem.AddRent();
+                                    //UpdateRentItem.AddRent();
+                                    UpdateRentItem.UpdateRent();
 
-                                    if (UpdateRentItem.IsCarIDValid(UpdateRentItem.consoleCarID) && UpdateRentItem.IsCustomerIDValid(UpdateRentItem.consoleCustomerID)
-                                            && UpdateRentItem.IsCarAvailable() && UpdateRentItem.IsCarLocationValid() && UpdateRentItem.IsDataEndValid(UpdateRentItem.consoleDataEnd)
-                                            && UpdateRentItem.IsDataStartValid(UpdateRentItem.consoleDataStart))
+                                    //if (UpdateRentItem.IsCarIDValid(UpdateRentItem.consoleCarID) && UpdateRentItem.IsCustomerIDValid(UpdateRentItem.consoleCustomerID)
+                                    //        && UpdateRentItem.IsCarAvailable() && UpdateRentItem.IsCarLocationValid() && UpdateRentItem.IsDataEndValid(UpdateRentItem.consoleDataEnd)
+                                    //        && UpdateRentItem.IsDataStartValid(UpdateRentItem.consoleDataStart))
+                                    if (UpdateRentItem.IsCarLocationValid() && UpdateRentItem.IsDataEndValid(UpdateRentItem.consoleDataEnd)   )
                                     {
                                         //UpdateRentItem.txt_CarID = Int32.Parse(UpdateRentItem.consoleCarID);
                                         //UpdateRentItem.txt_CostumerID = Int32.Parse(UpdateRentItem.consoleCustomerID);
@@ -155,11 +161,12 @@ namespace RentCar
                                         //UpdateRentItem.txt_EndDate = DateTime.Parse(UpdateRentItem.consoleDataEnd);
                                         reader.Close();
 
-                                        com = new SqlCommand("Update Reservations SET CarID=@CarID, CostumerID=@CostumerID, StartDate=@StartDate, EndDate=@EndDate, Location=@Location where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", con);
+                                        //com = new SqlCommand("Update Reservations SET CarID=@CarID, Id=@Id, StartDate=@StartDate, EndDate=@EndDate, Location=@Location where CarID=" + Int32.Parse(consoleUpdateCar) + " and CostumerID=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", con);
+                                        com = new SqlCommand("Update Reservations SET  EndDate=@EndDate, Location=@Location where CarID=" + Int32.Parse(consoleUpdateCar) + " and Id=" + Int32.Parse(consoleUpdateClient) + " and StartDate='" + DateTime.Parse(consoleUpdateStart) + "'", con);
 
-                                        com.Parameters.Add("@CarID", UpdateRentItem.txt_CarID);
-                                        com.Parameters.Add("@CostumerID", UpdateRentItem.txt_CostumerID);
-                                        com.Parameters.Add("@StartDate", UpdateRentItem.txt_StartDate);
+                                        //com.Parameters.Add("@CarID", UpdateRentItem.txt_CarID);
+                                        //com.Parameters.Add("@Id", UpdateRentItem.txt_Id);
+                                        //com.Parameters.Add("@StartDate", UpdateRentItem.txt_StartDate);
                                         com.Parameters.Add("@EndDate", UpdateRentItem.txt_EndDate);
                                         com.Parameters.Add("@Location", UpdateRentItem.txt_Location);
                                         com.ExecuteNonQuery();
@@ -202,7 +209,7 @@ namespace RentCar
                     case 3:
                         Console.Clear();
                         Console.WriteLine("List Rents");
-                        OutputTable("select CarID, CostumerID, StartDate, EndDate,Location from Reservations ", true);
+                        OutputTable("select CarID, Id, StartDate, EndDate,Location from Reservations ", true);
                         break;
                     case 4:
                         Console.Clear();
@@ -233,15 +240,7 @@ namespace RentCar
                         Console.ReadLine();
                         break;
 
-//                        select Cars.CarID,Plate, Manufacturer,Model from Reservations, Cars where Reservations.CarID = Cars.CarID and Reservations.StartDate <= '9/9/2001' and Reservations.EndDate >= '9/9/2001'
 
-//select Plate, Model, StartDate, EndDate, Reservations.Location from Reservations, Cars where (Reservations.CarID = Cars.CarID and(((Reservations.StartDate < '9/9/2001' and Reservations.EndDate < '9/9/2001') or(Reservations.StartDate > '9/9/2001' and Reservations.EndDate > '9/9/2001'))))  or(Cars.CarID not in (select CarID from Reservations)) 
-
-//select* from Cars, Reservations where Cars.CarID not in (select CarID from Reservations) group by Cars.CarID
-//select* from Cars, Reservations where Cars.CarID not in Reservations.CarID
-
-//select Cars.CarID, Plate, Model, StartDate, EndDate, Reservations.Location from Cars, Reservations
-//where Cars.CarID not in(select Reservations.CarID from Reservations where  Reservations.StartDate <= '9/9/2001' and Reservations.EndDate >= '9/9/2001' group by Cars.Plate) 
                     case 5:
 
                         Console.Clear();
@@ -259,22 +258,24 @@ namespace RentCar
 
 
 
-                            if (myCustomer.IsClientIDValid(myCustomer.consoleClientID) && myCustomer.IsZipValid() && myCustomer.BirthDateValid() && myCustomer.IsNameValid())
-                            {
+                            if (myCustomer.IsZipValid() && myCustomer.BirthDateValid() && myCustomer.IsNameValid())
+                                //if (myCustomer.IsClientIDValid(myCustomer.consoleClientID) && myCustomer.IsZipValid() && myCustomer.BirthDateValid() && myCustomer.IsNameValid())
+                                {
                                 
                                 
                                 
-                                com = new SqlCommand("insert into Customers (CostumerID, Name, BirthDate, ZIPCode) values (@CostumerID, @Name, @BirthDate, @ZIPCode)", con);
+                                com = new SqlCommand("insert into Customers ( Name, BirthDate, ZIPCode) values ( @Name, @BirthDate, @ZIPCode)", con);
+                                //com = new SqlCommand("insert into Customers (Id, Name, BirthDate, ZIPCode) values (@Id, @Name, @BirthDate, @ZIPCode)", con);
 
-                                com.Parameters.Add("@CostumerID", myCustomer.txt_CostumerID);
+                                //com.Parameters.Add("@Id", myCustomer.txt_Id);
                                 com.Parameters.Add("@Name", myCustomer.txt_Name);
                                 com.Parameters.Add("@BirthDate", myCustomer.txt_BirthDate);
                                 com.Parameters.Add("@ZIPCode", myCustomer.txt_Location);
-                                com.CommandText = "SET IDENTITY_INSERT Customers ON";
+                                //com.CommandText = "SET IDENTITY_INSERT Customers ON";
                                 com.ExecuteNonQuery();
                                 Console.WriteLine("Success  register a new customer!");
 
-                                com.CommandText = "SET IDENTITY_INSERT Customers OFF";
+                                //com.CommandText = "SET IDENTITY_INSERT Customers OFF";
                                 com.ExecuteNonQuery();
                             }
                             else
@@ -302,7 +303,7 @@ namespace RentCar
 
                         Customers UpdateCustomer= new Customers();
                         Console.WriteLine("All customers:");
-                        OutputTable("select CostumerID, Name, BirthDate, ZIPCode from Customers ", true);
+                        OutputTable("select Id, Name, BirthDate, ZIPCode from Customers ", true);
                         Console.WriteLine("   ");
                         Console.WriteLine("Which customer would you like to update?");
 
@@ -319,13 +320,13 @@ namespace RentCar
 
                                 con = new SqlConnection(Properties.Settings.Default.ConnectionString);
                                 con.Open();
-                                reader = new SqlCommand("select CostumerID, Name, BirthDate, ZIPCode from Customers where CostumerID=" + Int32.Parse(consoleUpdateCustomer), con).ExecuteReader();
+                                reader = new SqlCommand("select Id, Name, BirthDate, ZIPCode from Customers where Id=" + Int32.Parse(consoleUpdateCustomer), con).ExecuteReader();
 
                                 if (reader.FieldCount != null)
                                 {
                                     Console.Clear();
                                     Console.WriteLine("Update this customer:");
-                                    OutputTable("select CostumerID, Name, BirthDate, ZIPCode from Customers where CostumerID=" + Int32.Parse(consoleUpdateCustomer), true);
+                                    OutputTable("select Id, Name, BirthDate, ZIPCode from Customers where Id=" + Int32.Parse(consoleUpdateCustomer), true);
                                     UpdateCustomer.AddCustomer();
 
                                     if  (UpdateCustomer.IsZipValid() && UpdateCustomer.BirthDateValid() && UpdateCustomer.IsNameValid())
@@ -333,8 +334,8 @@ namespace RentCar
                                         
                                         reader.Close();
                                     
-                                        com = new SqlCommand("SET IDENTITY_INSERT dbo.Customers ON; Update dbo.Customers SET  Name=@Name,  BirthDate=@BirthDate, ZIPCode=@ZIPCode where CostumerID=" + Int32.Parse(consoleUpdateCustomer), con);
-                                       Console.WriteLine("Update Customers SET  Name='"+UpdateCustomer.txt_Name+"', BirthDate='"+UpdateCustomer.txt_BirthDate+"', ZIPCode='"+UpdateCustomer.txt_Location +"' where CostumerID=" + Int32.Parse(consoleUpdateCustomer));
+                                        com = new SqlCommand("SET IDENTITY_INSERT dbo.Customers ON; Update dbo.Customers SET  Name=@Name,  BirthDate=@BirthDate, ZIPCode=@ZIPCode where Id=" + Int32.Parse(consoleUpdateCustomer), con);
+                                       //Console.WriteLine("Update Customers SET  Name='"+UpdateCustomer.txt_Name+"', BirthDate='"+UpdateCustomer.txt_BirthDate+"', ZIPCode='"+UpdateCustomer.txt_Location + "' where Id=" + Int32.Parse(consoleUpdateCustomer));
                                         //com.Parameters.Add("@CostumerID", UpdateCustomer.txt_CostumerID);
                                         com.Parameters.Add("@Name", UpdateCustomer.txt_Name);
                                         com.Parameters.Add("@BirthDate", UpdateCustomer.txt_BirthDate);
@@ -343,7 +344,7 @@ namespace RentCar
                                         //com.CommandText = "SET IDENTITY_INSERT dbo.Customers ON";
                                         int rows = com.ExecuteNonQuery();
                                         Console.WriteLine("Success  update this customer!");
-                                        OutputTable("select CostumerID, Name, BirthDate, ZIPCode from Customers where CostumerID=" + Int32.Parse(consoleUpdateCustomer), true);
+                                        OutputTable("select Id, Name, BirthDate, ZIPCode from Customers where Id=" + Int32.Parse(consoleUpdateCustomer), true);
                                         com.CommandText = "SET IDENTITY_INSERT Customers OFF";
                                         com.ExecuteNonQuery();
                                        

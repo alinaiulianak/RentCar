@@ -11,21 +11,21 @@ namespace RentCar
 {
     class Customers
     {
-        public int CostumerID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public string Location { get; set; }
         public string consoleClientID, consoleClientName, consoleBirthDate, consoleZipCode;
 
-        public int txt_CostumerID;
+        public int txt_Id;
         public DateTime txt_BirthDate;
         public string txt_Location, txt_Name;
 
         public void AddCustomer()
         {
 
-            Console.Write("Client ID:");
-            consoleClientID = Console.ReadLine().ToString();
+            //Console.Write("Client ID:");
+            //consoleClientID = Console.ReadLine().ToString();
 
             Console.Write("Client Name:");
             consoleClientName = Console.ReadLine().ToString();
@@ -78,7 +78,7 @@ namespace RentCar
                     else
 
                     {
-                        txt_CostumerID = Int32.Parse(consoleClientID);
+                        txt_Id = Int32.Parse(consoleClientID);
                         return true;
 
                     }
@@ -127,8 +127,8 @@ namespace RentCar
                 else
                 {
 
-                    
-                     txt_CostumerID = Int32.Parse(consoleClientID);
+
+                    txt_Id = Int32.Parse(consoleClientID);
                      return true;
 
                   }
